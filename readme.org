@@ -1,0 +1,3 @@
+#+title: Data-sharing
+
+This repo is for studies of how well the data-sharing practices we have used in our publications have worked. I have been sharing data in publications in ways that are intended to be reusable for about a decade. In this repo I will go back to these papers and see how well they worked.
