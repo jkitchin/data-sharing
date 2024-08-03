@@ -1,0 +1,157 @@
+* Miller, S. D., Pushkarev, V. V., Gellman, A. J., & Kitchin, J. R. (2014). Simulating temperature programmed desorption of oxygen on Pt(111) using DFT derived coverage dependent desorption barriers. Topics in Catalysis, 57(1-4), 106–117. https://doi.org/10.1007/s11244-013-0166-3
+[[cite:&miller-2014-simul-temper]]
+
+This is probably the first paper I used org-mode with the goal of having a single file with all the data and code in it. That org-file is in an attachment in the SI. I extracted it here.
+
+[[./data-files/supporting-information.org]]
+
+This will make more sense if you follow the video at https://youtube.com/live/s9mD-AV0Gzg.
+
+** Summary notes
+
+It worked very well to extract the org-tables from the supporting information file.
+
+It seems likely something changed in the mat file code, I had to change some indexing to get it to work today. 
+
+The paper used Python 2. That won't run without some modification for Python 3 today.
+
+As a proof of concept, this was effective for simple tabular data. I wouldn't use this approach today except for the simplest and smallest tabular data. It would be way more convenient to have shared the original Excel files, or saved this data as json probably. That would require the use of an external archive though like Figshare.
+
+The main benefit of this approach is it uses the publishing site directly, with a single SI file, and no external archives. The downsides are the skills required to use org-mode, and knowledge of PDF attachments are not that common.
+
+** Extract data to remake figure 1
+
+I use org-mode to get the data from the SI org-file here. 
+
+#+begin_src jupyter-python :var exposures=data-files/supporting-information.org:exposures :var tpd1=data-files/supporting-information.org:tpd1 :var tpd2=data-files/supporting-information.org:tpd2 :var tpd3=data-files/supporting-information.org:tpd3 :var tpd4=data-files/supporting-information.org:tpd4 :var tpd5=data-files/supporting-information.org:tpd5 :var tpd6=data-files/supporting-information.org:tpd6 :var tpd7=data-files/supporting-information.org:tpd7 :var tpd8=data-files/supporting-information.org:tpd8 :var tpd9=data-files/supporting-information.org:tpd9 :var tpd10=data-files/supporting-information.org:tpd10 :var tpd11=data-files/supporting-information.org:tpd11 :var tpd12=data-files/supporting-information.org:tpd12 :var tpd13=data-files/supporting-information.org:tpd13 :var tpd14=data-files/supporting-information.org:tpd14 :var tpd15=data-files/supporting-information.org:tpd15 :var tpd16=data-files/supporting-information.org:tpd16 :var tpd17=data-files/supporting-information.org:tpd17 :var tpd18=data-files/supporting-information.org:tpd18 :var tpd19=data-files/supporting-information.org:tpd19 :var tpd20=data-files/supporting-information.org:tpd20 :results output
+import matplotlib.pyplot as plt
+from scipy.io import savemat
+
+exposures = [float(x[1]) for x in exposures]
+AllT, AllI = [], [] #lists to save all spectra in
+
+# these are the temperatures for each spectrum
+AllT.append([float(x[0]) for x in tpd1])
+AllT.append([float(x[0]) for x in tpd2])
+AllT.append([float(x[0]) for x in tpd3])
+AllT.append([float(x[0]) for x in tpd4])
+AllT.append([float(x[0]) for x in tpd5])
+AllT.append([float(x[0]) for x in tpd6])
+AllT.append([float(x[0]) for x in tpd7])
+AllT.append([float(x[0]) for x in tpd8])
+AllT.append([float(x[0]) for x in tpd9])
+AllT.append([float(x[0]) for x in tpd10])
+AllT.append([float(x[0]) for x in tpd11])
+AllT.append([float(x[0]) for x in tpd12])
+AllT.append([float(x[0]) for x in tpd13])
+AllT.append([float(x[0]) for x in tpd14])
+AllT.append([float(x[0]) for x in tpd15])
+AllT.append([float(x[0]) for x in tpd16])
+AllT.append([float(x[0]) for x in tpd17])
+AllT.append([float(x[0]) for x in tpd18])
+AllT.append([float(x[0]) for x in tpd19])
+AllT.append([float(x[0]) for x in tpd20])
+
+# these are the MS intensities for each spectrum
+AllI.append([float(x[1]) for x in tpd1])
+AllI.append([float(x[1]) for x in tpd2])
+AllI.append([float(x[1]) for x in tpd3])
+AllI.append([float(x[1]) for x in tpd4])
+AllI.append([float(x[1]) for x in tpd5])
+AllI.append([float(x[1]) for x in tpd6])
+AllI.append([float(x[1]) for x in tpd7])
+AllI.append([float(x[1]) for x in tpd8])
+AllI.append([float(x[1]) for x in tpd9])
+AllI.append([float(x[1]) for x in tpd10])
+AllI.append([float(x[1]) for x in tpd11])
+AllI.append([float(x[1]) for x in tpd12])
+AllI.append([float(x[1]) for x in tpd13])
+AllI.append([float(x[1]) for x in tpd14])
+AllI.append([float(x[1]) for x in tpd15])
+AllI.append([float(x[1]) for x in tpd16])
+AllI.append([float(x[1]) for x in tpd17])
+AllI.append([float(x[1]) for x in tpd18])
+AllI.append([float(x[1]) for x in tpd19])
+AllI.append([float(x[1]) for x in tpd20])
+
+# Make some figures of the raw data
+for i in range(20):
+    plt.plot(AllT[i], AllI[i], label='{0} L'.format(exposures[i]))
+
+plt.xlabel('Temperature (K)')
+plt.ylabel('M.S. intensity (arb. units)')
+plt.legend(ncol=3, loc='best')
+
+# Finally, this is the data file we save for all subsequent analysis
+savemat('raw-data.mat',{'T':AllT, 'M':AllI, 'exposures':exposures}, oned_as='row')
+#+end_src
+
+#+RESULTS:
+[[./.ob-jupyter/41bc2ffe1c8e60e4d049896e76093e79d3abdd7a.png]]
+
+#+BEGIN_SRC jupyter-python
+import numpy as np
+from scipy.io import loadmat
+data = loadmat('raw-data.mat')
+data
+
+areas = []
+for i in range(len(data['T'])):
+
+    t = data['T'][i]
+    m = data['M'][i]
+    ind1 = (t > 400) & (t < 500)
+    baseline = np.average(m[ind1])
+    
+    ind2 = (t >= 500) & (t <= 1000) # narrow data set to this T range
+
+    newm = m - baseline # subtract baseline
+
+    
+        
+    area = np.trapz(newm[ind2], t[ind2])
+    areas.append(area)
+
+plt.semilogx(data['exposures'][0], areas, 'bo ')
+plt.semilogx(data['exposures'][0], 1.5e-5*np.ones(data['exposures'][0].shape), 'k-')
+plt.xlabel('Exposure (Langmuir)')
+plt.ylabel('Integrated area (arb. units)')
+plt.subplots_adjust(left=0.18)
+#+END_SRC
+
+#+RESULTS:
+[[./.ob-jupyter/fe02c14bc7e4df09083e85bc487c4154b394bfaf.png]]
+
+
+#+BEGIN_SRC jupyter-python
+import numpy as np
+from scipy.io import loadmat
+data = loadmat('raw-data.mat')
+data
+
+areas = []
+
+sat_area = 1.5e-5
+thetamax = 0.25
+
+for i in range(len(data['T'])):
+
+    t = data['T'][i]
+    m = data['M'][i]
+    ind1 = (t > 400) & (t < 500)
+    baseline = np.average(m[ind1])
+    
+    ind2 = (t >= 500) & (t <= 1000) # narrow data set to this T range
+
+    newm = (m - baseline) / sat_area * thetamax
+
+    
+    plt.plot(t[ind2], newm[ind2], 'k-')
+
+plt.xlabel('Temperature (K)')
+plt.ylabel('Integrated area (ML/K)');
+#+END_SRC
+
+#+RESULTS:
+[[./.ob-jupyter/6a39cf68b908e21bb595e7ac33e26d7bc07de3e1.png]]
+

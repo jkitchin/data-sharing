@@ -1,3 +1,9 @@
-#+title: Data-sharing
+#+title: Data-sharing in scientific publications
 
 This repo is for studies of how well the data-sharing practices we have used in our publications have worked. I have been sharing data in publications in ways that are intended to be reusable for about a decade. In this repo I will go back to these papers and see how well they worked.
+
+#+attr_org: :width 400
+[[./screenshots/date-03-08-2024-time-08-59-33.png]]
+
+
+See [[./analysis-of-papers.org]] for each paper in this series.
