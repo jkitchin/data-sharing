@@ -7,3 +7,9 @@ This repo is for studies of how well the data-sharing practices we have used in 
 
 
 See [[./analysis-of-papers.org]] for each paper in this series.
+
+Here is the introductory video:
+
+#+BEGIN_EXPORT html
+<iframe width="560" height="315" src="https://www.youtube.com/embed/s9mD-AV0Gzg?si=CFnP6uD-XcBxDejW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+#+END_EXPORT
