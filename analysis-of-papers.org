@@ -1,4 +1,7 @@
 * Miller, S. D., Pushkarev, V. V., Gellman, A. J., & Kitchin, J. R. (2014). Simulating temperature programmed desorption of oxygen on Pt(111) using DFT derived coverage dependent desorption barriers. Topics in Catalysis, 57(1-4), 106–117. https://doi.org/10.1007/s11244-013-0166-3
+:PROPERTIES:
+:ID:       448AADA0-5799-4114-B3C9-4CD7A3C3E11D
+:END:
 [[cite:&miller-2014-simul-temper]]
 
 This is probably the first paper I used org-mode with the goal of having a single file with all the data and code in it. That org-file is in an attachment in the SI. I extracted it here.
@@ -18,6 +21,8 @@ The paper used Python 2. That won't run without some modification for Python 3 t
 As a proof of concept, this was effective for simple tabular data. I wouldn't use this approach today except for the simplest and smallest tabular data. It would be way more convenient to have shared the original Excel files, or saved this data as json probably. That would require the use of an external archive though like Figshare.
 
 The main benefit of this approach is it uses the publishing site directly, with a single SI file, and no external archives. The downsides are the skills required to use org-mode, and knowledge of PDF attachments are not that common.
+
+I give this paper an A on data-sharing.
 
 ** Extract data to remake figure 1
 
@@ -154,4 +159,72 @@ plt.ylabel('Integrated area (ML/K)');
 
 #+RESULTS:
 [[./.ob-jupyter/6a39cf68b908e21bb595e7ac33e26d7bc07de3e1.png]]
+
+
+* Anita Lee, John Eslick, David Miller and John R. Kitchin, Comparisons of Amine Solvents for Post-combustion CO2 Capture: A Multi-objective Analysis Approach, International Journal of Greenhouse Gas Control, 18, 68-74 (2013). https://doi.org/10.1016/j.ijggc.2013.06.020. 
+:PROPERTIES:
+:ID:       A33642CC-7354-4CEB-8678-FB152641D1F0
+:END:
+
+#+attr_org: :width 400
+#+caption: Data Sourcery
+[[./screenshots/date-04-08-2024-time-14-59-58.png]]
+
+
+#+BEGIN_SRC jupyter-python
+import pandas as pd
+df_amp = pd.read_excel('1-s2.0-S1750583613002703-mmc1.xls',
+                       sheet_name='AMP')
+
+df_dea  = pd.read_excel('1-s2.0-S1750583613002703-mmc1.xls',
+                       sheet_name='DEA')
+
+df_mea  = pd.read_excel('1-s2.0-S1750583613002703-mmc1.xls',
+                       sheet_name='MEA')
+
+df_mea.dropna(inplace=True)
+df_dea.dropna(inplace=True)
+df_amp.dropna(inplace=True)
+
+import matplotlib.pyplot as plt
+plt.figure(figsize=(4, 5))
+plt.plot(df_mea['Power_max'], df_mea['CapEx'] / 1e6, 'bo', mfc='white', label='MEA', alpha=0.2)
+plt.plot(df_dea['Power_max'], df_dea['CapEx'] / 1e6, 'r^', mfc='white', label='DEA', alpha=0.2)
+plt.plot(df_amp['Power_max'], df_amp['CapEx'] / 1e6, 'gd', mfc='white', label='AMP', alpha=0.2)
+
+from paretoset import paretoset
+
+mask = paretoset(df_mea[['Power_max', 'CapEx']], sense=["max", "min"])
+plt.plot(df_mea['Power_max'].values[mask], df_mea['CapEx'].values[mask] / 1e6, 'bo', label='AMP')
+
+mask = paretoset(df_dea[['Power_max', 'CapEx']], sense=["max", "min"])
+plt.plot(df_dea['Power_max'].values[mask], df_dea['CapEx'].values[mask] / 1e6, 'r^', label='AMP')
+
+mask = paretoset(df_amp[['Power_max', 'CapEx']], sense=["max", "min"])
+plt.plot(df_amp['Power_max'].values[mask], df_amp['CapEx'].values[mask] / 1e6, 'gd', label='AMP')
+
+plt.xlim([360, 420])
+plt.ylim([200, 600])
+plt.legend()
+
+plt.xlabel('Net Power Output [MW]')
+plt.ylabel('Capital Cost [$M]');
+#+END_SRC
+
+#+RESULTS:
+[[./.ob-jupyter/5d3ade20cd6154845043632c78323e75c183fead.png]]
+
+** Summary notes 
+
+Overall we seem to have reproduced a figure from the paper, but there is a little uncertainty because we only had the data, and not the code that was used. The data is missing some things like units, and we have to rely on the manuscript for context. That is not ideal, but a typical reality in my experience; the manuscript is the metadata most of the time.
+
+Overall, I give this paper a C on data sharing.
+
+* TODO Prateek Mehta, Paul Salvador and John R. Kitchin, Identifying Potential BO2 Oxide Polymorphs for Epitaxial Growth Candidates, ACS Applied Materials and Interfaces, 6(5), 3630-3639 (2014). http://pubs.acs.org/doi/full/10.1021/am4059149.
+
+Uses json
+
+* TODO Matthew Curnan and John R. Kitchin, Investigating the Energetic Ordering of Stable and Metastable TiO2 Polymorphs Using DFT+U and Hybrid Functionals, J. Phys. Chem. C, 119 (36), 21060–21071 (2015). http://dx.doi.org/10.1021/acs.jpcc.5b05338. 
+
+Uses sqlite for data
 

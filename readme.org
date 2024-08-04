@@ -8,4 +8,17 @@ This repo is for studies of how well the data-sharing practices we have used in 
 
 See [[./analysis-of-papers.org]] for each paper in this series.
 
+#+name: data-sharing-grades
+#+caption: Grades for data-sharing. 
+| paper                                       | grade | notes               |          |
+|---------------------------------------------+-------+---------------------+----------|
+| https://doi.org/10.1007/s11244-013-0166-3   | A     | org-mode            | [[id:448AADA0-5799-4114-B3C9-4CD7A3C3E11D][analysis]] |
+| https://doi.org/10.1016/j.ijggc.2013.06.020 | C     | Excel file for data | [[id:A33642CC-7354-4CEB-8678-FB152641D1F0][analysis]] |
+
+
+
+
+
+
 Here is the introductory video: https://www.youtube.com/live/s9mD-AV0Gzg?si=QFl_HDNuMq35c0jY
+- video 2 :: https://youtube.com/live/fG4O6xUSSL4
