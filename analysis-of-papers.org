@@ -220,9 +220,24 @@ Overall we seem to have reproduced a figure from the paper, but there is a littl
 
 Overall, I give this paper a C on data sharing.
 
-* TODO Prateek Mehta, Paul Salvador and John R. Kitchin, Identifying Potential BO2 Oxide Polymorphs for Epitaxial Growth Candidates, ACS Applied Materials and Interfaces, 6(5), 3630-3639 (2014). http://pubs.acs.org/doi/full/10.1021/am4059149.
+* Prateek Mehta, Paul Salvador and John R. Kitchin, Identifying Potential BO2 Oxide Polymorphs for Epitaxial Growth Candidates, ACS Applied Materials and Interfaces, 6(5), 3630-3639 (2014). http://pubs.acs.org/doi/full/10.1021/am4059149.
+:PROPERTIES:
+:ID:       F3690788-6B48-4989-B2AD-BA5EE7E219A6
+:END:
 
-Uses json
+Data mining
+#+attr_org: :width 400
+[[./screenshots/date-05-08-2024-time-16-10-08.png]]
+
+Work in [[./videos/video-3/]].
+
+** Summary notes
+
+Python2 code - had to be updated to Python 3 or use Python 2 with old libraries that might be hard to find
+
+Data is in json, easy to read in Python, and we were able regenerate figures, tables, output, etc. with minor updates to Python 3.
+
+This paper gets an A for data-sharing.
 
 * TODO Matthew Curnan and John R. Kitchin, Investigating the Energetic Ordering of Stable and Metastable TiO2 Polymorphs Using DFT+U and Hybrid Functionals, J. Phys. Chem. C, 119 (36), 21060–21071 (2015). http://dx.doi.org/10.1021/acs.jpcc.5b05338. 
 
