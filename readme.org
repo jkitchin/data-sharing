@@ -24,3 +24,4 @@ See [[./analysis-of-papers.org]] for each paper in this series.
 - introductory video :: https://www.youtube.com/live/s9mD-AV0Gzg?si=QFl_HDNuMq35c0jY
 - video 2 :: https://youtube.com/live/fG4O6xUSSL4
 - video 3 :: https://youtube.com/live/1psO1fVkozQ
+- video 4 :: https://www.youtube.com/live/FIBIPCl4T6o
