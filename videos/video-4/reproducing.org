@@ -1,0 +1,302 @@
+#+BEGIN_SRC python :results output
+import sqlite3
+
+db = sqlite3.connect('ITEOO_data.sqlite')
+
+NULLchar = '-'
+datapts_dict = {}
+
+for row in db.execute('''
+select distinct input.ISTART, input.ICHARG, input.ENCUT, input.ISMEAR,
+input.SIGMA, input.ISYM, input.IBRION, input.EDIFF, input.EDIFFG, input.MAXMIX,
+input.NELMIN, input.NELM, input.NSW, input.ISPIN, input.ISIF, input.GGA,
+input.LDAU, input.LDAUU, input.LDAUJ, input.LDAUL, input.LDAUPRINT, input.LASPH,
+input.LMAXMIX, input.LORBIT, input.SYMPREC, input.NELMDL, input.LHFCALC,
+input.ALGO, input.TIME, input.PRECFOCK, input.LMAXFOCK, input.AEXX, input.NKRED, 
+input.NBANDS, input.KPoints, input.KPointSampling, input.Pseudopotential1,
+input.Pseudopotential2, input.Energy from Structure as s
+inner join Symmetry as sy on sy.Struct=s.Struct
+inner join Composition1 as c1 on c1.SID=s.SID
+inner join Composition2 as c2 on c1.MID=c2.MID
+inner join Metadata as mt on (mt.MID=c1.MID and mt.SID=c1.SID)
+inner join FormEURange as feu on feu.CID=mt.CID
+inner join CalcResultEnergetics as cre on cre.EOpt=feu.EOpt
+inner join ParametersInputVASP as input on input.Energy=cre.Energy
+where s.Morph='Rutile'
+and mt.PseudoB='PAW-Ti-pv'
+and mt.PseudoO='PAW-O'
+and mt.Software='VASP'
+and mt.Method='E'
+and feu.UValue='3.00'
+;'''):
+    datapts_list = []
+
+    ( a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,
+      u,v,w,x,y,aa,ab,ac,ad,ae,af,ag,ah,ai,aj,ak,al,am,an ) = row
+
+    series =  (a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,
+               aa,ab,ac,ad,ae,af,ag,ah,ai,aj,ak,al,am,an)
+
+    for z in series:
+        datapts_list.append(z)
+
+    datapts_dict[an] = datapts_list
+    del datapts_dict[an][-1]
+
+Input_check = {}
+Input_match = {}
+
+att_list = [ 'ISTART', 'ICHARG', 'ENCUT', 'ISMEAR', 'SIGMA', 'ISYM', 'IBRION',
+'EDIFF', 'EDIFFG', 'MAXMIX', 'NELMIN', 'NELM', 'NSW', 'ISPIN', 'ISIF', 'GGA',
+'LDAU', 'LDAUU', 'LDAUJ', 'LDAUL', 'LDAUPRINT', 'LASPH', 'LMAXMIX', 'LORBIT', 
+'SYMPREC', 'NELMDL', 'LHFCALC', 'ALGO', 'TIME', 'PRECFOCK', 'LMAXFOCK', 'AEXX', 
+'NKRED', 'NBANDS', 'KPoints', 'KPointSampling', 'Pseudopotential1', 'Pseudopotential2' ]
+
+for i,j in enumerate( datapts_dict.keys() ):
+    if datapts_dict[j] not in Input_check.values():
+        list_match = []
+        list_check = []
+
+        for k,l in enumerate( att_list ):
+            list_check.append( datapts_dict[j][k] )
+
+            if datapts_dict[j][k] != NULLchar:
+                list_match.append( (att_list[k], datapts_dict[j][k]) )
+
+        Input_check[i] = list_check
+        Input_match[i] = list_match
+
+SortCAR = { "ISTART": 0, "ICHARG": 1, "ENCUT": 2, "ISMEAR": 3,
+            "SIGMA": 4, "ISYM": 5, "IBRION": 6, "EDIFF": 7,
+            "EDIFFG": 8, "MAXMIX": 9, "NELMIN": 10, "NELM": 11,
+            "NSW": 12, "ISPIN": 13, "ISIF": 14,  "GGA": 10,
+            "LDAU": 11, "LDAUU": 12, "LDAUJ": 13, "LDAUL": 14,
+            "LDAUPRINT": 15, "LASPH": 16, "LMAXMIX": 17,
+            "LORBIT": 17, "SYMPREC": 18, "NELMDL": 19,
+            "KPointSampling": 20, "KPoints": 21,
+            "Pseudopotential1": 22, "Pseudopotential2": 23 }
+
+Input_INCKPTPOT = sorted(Input_match[0], key=lambda tag: SortCAR[tag[0]])
+
+num_KPT = 2
+num_POT = 2
+num_INCAR  = len(Input_INCKPTPOT) - num_KPT - num_POT
+
+for i in range( num_INCAR ):
+    print(Input_INCKPTPOT[i][0],'=',Input_INCKPTPOT[i][1])
+print(NULLchar)
+
+print("0")
+print(Input_INCKPTPOT[num_INCAR+1][0])
+print(str(Input_INCKPTPOT[num_INCAR+1][1]).replace(';',' '))
+print("0 0 0")
+print(NULLchar)
+
+for i in range( num_POT ):
+    print( Input_INCKPTPOT[num_INCAR+num_KPT+i][0],Input_INCKPTPOT[num_INCAR+num_KPT+i][1])
+
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+ISTART = 0
+ICHARG = 2
+ENCUT = 600
+ISMEAR = 0
+SIGMA = 0.05
+ISYM = 1
+IBRION = 1
+EDIFF = 5.00E-06
+EDIFFG = -0.01
+MAXMIX = -100
+NELMIN = 5
+NELM = 200
+LDAU = .TRUE.
+NSW = 100
+LDAUU = 3.00;0.00
+ISPIN = 2
+LDAUJ = 0.00;0.00
+ISIF = 4
+LDAUL = 2;-1
+LDAUPRINT = 1
+LASPH = .TRUE.
+LMAXMIX = 4
+SYMPREC = 1.00E-06
+NELMDL = -10
+-
+0
+KPoints
+8 8 8
+0 0 0
+-
+Pseudopotential1 PAW_PBE Ti_pv 07Sep2000
+Pseudopotential2 PAW_PBE O 08Apr2002
+#+end_example
+
+
+#+BEGIN_SRC jupyter-python
+#+BEGIN_SRC python :results output
+#+caption: MySQL query PBE LDA Ti O O_s
+import matplotlib.pyplot as plt
+import sqlite3
+
+db = sqlite3.connect('ITEOO_data.sqlite')
+
+Pseudo_O, Functional, Polymorph, Uvalue, Eopt, atomnum = [], [], [], [], [], []
+
+datapts_dict = {}
+WRT_Morph = 'Rutile'
+
+for row in db.execute('''
+select distinct mt.PseudoO, mt.Functional, s.Morph, feu.UValue, feu.EOpt, c1.Stoich1 from Structure as s
+inner join Composition1 as c1 on c1.SID=s.SID
+inner join Metadata as mt on (mt.MID=c1.MID and mt.SID=c1.SID)
+inner join FormEURange as feu on feu.CID=mt.CID
+where (s.Morph='Rutile' or s.Morph='Anatase' or s.Morph='Columbite' or s.Morph='Brookite')
+and c1.At1='Ti'
+and mt.PseudoB='PAW-Ti'
+and (mt.PseudoO='PAW-O' or mt.PseudoO='PAW-O-s')
+and (mt.Functional='PBE' or mt.Functional='LDA')
+and mt.Software='VASP'
+and mt.Method='E'
+and (feu.UValue='0' or feu.UValue='1' or feu.UValue='2' or feu.UValue='3'
+or feu.UValue='4' or feu.UValue='5' or feu.UValue='6')
+;'''):
+    datapts_list = []
+    a,b,c,d,e,f = row
+    datapts_list.append( (a,b,c,d,e,f) )
+
+    Pseudo_O += [a]
+    Functional += [b]
+    Polymorph += [c]
+
+    datapts_dict[row] = datapts_list
+
+Pseudo_list = list( set( Pseudo_O ) )
+Functional_list = list( set( Functional ) )
+Morph_list = list( set( Polymorph ) )
+SortElist = {}
+EBsiteMatch = {}
+
+for i in Pseudo_list:
+    SortElist[i] = {}
+    EBsiteMatch[i] = {}
+
+    for j in Functional_list:
+        SortElist[i][j] = {}
+        EBsiteMatch[i][j] = {}
+
+        for k in Morph_list:
+            SortElist[i][j][k] = {}
+            EBsiteMatch[i][j][k] = []
+            del_list = []
+
+            for l in datapts_dict:
+                if l[0] == i and l[1] == j and l[2] == k:
+                    SortElist[ l[0] ][ l[1] ][ l[2] ][ l[3] ] = float( l[4] ) / float( l[5] )
+                    del_list.append( datapts_dict[l] )
+                else:
+                    pass
+
+            for l in del_list:
+                del l
+
+for i in Pseudo_list:
+    for j in Functional_list:
+        for k in Morph_list:
+            U_list = list(SortElist[i][j][k].keys())
+            U_list.sort()
+            EmapU_list = []
+
+            for l in U_list:
+                EmapU_value = SortElist[i][j][k][l] - SortElist[i][j][WRT_Morph][l]
+                EmapU_list.append( EmapU_value )
+
+            EBsiteMatch[i][j][k].append( EmapU_list )
+            EBsiteMatch[i][j][k].append( U_list )
+
+ax = plt.gca()
+
+print( "PBE Functional, O pseudopotential:")
+print( "Rutile: " + str(EBsiteMatch['PAW-O']['PBE']['Rutile'][0][0:2]))
+print( str(EBsiteMatch['PAW-O']['PBE']['Rutile'][0][2:4]))
+print( str(EBsiteMatch['PAW-O']['PBE']['Rutile'][0][4:]))
+print( "Anatase: " + str(EBsiteMatch['PAW-O']['PBE']['Anatase'][0][0:2]))
+print( str(EBsiteMatch['PAW-O']['PBE']['Anatase'][0][2:4]))
+print( str(EBsiteMatch['PAW-O']['PBE']['Anatase'][0][4:]) )
+print( "Columbite: " + str(EBsiteMatch['PAW-O']['PBE']['Columbite'][0][0:2]))
+print( str(EBsiteMatch['PAW-O']['PBE']['Columbite'][0][2:4]))
+print( str(EBsiteMatch['PAW-O']['PBE']['Columbite'][0][4:]))
+print( "Brookite: " + str(EBsiteMatch['PAW-O']['PBE']['Brookite'][0][0:2]))
+print( str(EBsiteMatch['PAW-O']['PBE']['Brookite'][0][2:4]))
+print( str(EBsiteMatch['PAW-O']['PBE']['Brookite'][0][4:]) + "\n")
+
+print( "LDA Functional, O pseudopotential:")
+print( "Rutile: " + str(EBsiteMatch['PAW-O']['LDA']['Rutile'][0][0:2]))
+print( str(EBsiteMatch['PAW-O']['LDA']['Rutile'][0][2:4]))
+print( str(EBsiteMatch['PAW-O']['LDA']['Rutile'][0][4:]))
+print( "Anatase: " + str(EBsiteMatch['PAW-O']['LDA']['Anatase'][0][0:2]))
+print( str(EBsiteMatch['PAW-O']['LDA']['Anatase'][0][2:4]))
+print( str(EBsiteMatch['PAW-O']['LDA']['Anatase'][0][4:]))
+print( "Columbite: " + str(EBsiteMatch['PAW-O']['LDA']['Columbite'][0][0:2]))
+print( str(EBsiteMatch['PAW-O']['LDA']['Columbite'][0][2:4]))
+print( str(EBsiteMatch['PAW-O']['LDA']['Columbite'][0][4:]))
+print( "Brookite: " + str(EBsiteMatch['PAW-O']['LDA']['Brookite'][0][0:2]))
+print( str(EBsiteMatch['PAW-O']['LDA']['Brookite'][0][2:4]))
+print( str(EBsiteMatch['PAW-O']['LDA']['Brookite'][0][4:]) + "\n")
+
+print( "PBE Functional, O_s pseudopotential:")
+print( "Rutile: " + str(EBsiteMatch['PAW-O-s']['PBE']['Rutile'][0][0:2]))
+print( str(EBsiteMatch['PAW-O-s']['PBE']['Rutile'][0][2:4]))
+print( str(EBsiteMatch['PAW-O-s']['PBE']['Rutile'][0][4:]))
+print( "Anatase: " + str(EBsiteMatch['PAW-O-s']['PBE']['Anatase'][0][0:2]))
+print( str(EBsiteMatch['PAW-O-s']['PBE']['Anatase'][0][2:4]))
+print( str(EBsiteMatch['PAW-O-s']['PBE']['Anatase'][0][4:]))
+print( "Columbite: " + str(EBsiteMatch['PAW-O-s']['PBE']['Columbite'][0][0:2]))
+print( str(EBsiteMatch['PAW-O-s']['PBE']['Columbite'][0][2:4]))
+print( str(EBsiteMatch['PAW-O-s']['PBE']['Columbite'][0][4:]))
+print( "Brookite: " + str(EBsiteMatch['PAW-O-s']['PBE']['Brookite'][0][0:2]))
+print( str(EBsiteMatch['PAW-O-s']['PBE']['Brookite'][0][2:4]))
+print( str(EBsiteMatch['PAW-O-s']['PBE']['Brookite'][0][4:]) + "\n")
+
+plt.figure(figsize=(3,4))
+plt.plot(EBsiteMatch['PAW-O']['PBE']['Rutile'][1], EBsiteMatch['PAW-O']['PBE']['Rutile'][0], 'k-')
+
+plt.plot(EBsiteMatch['PAW-O']['PBE']['Anatase'][1], EBsiteMatch['PAW-O']['PBE']['Anatase'][0],
+'bo-', label = r'$\Delta$E$_{R-A}$,PBE')
+plt.plot(EBsiteMatch['PAW-O']['PBE']['Columbite'][1], EBsiteMatch['PAW-O']['PBE']['Columbite'][0],
+'ro-', label = r'$\Delta$E$_{R-C}$,PBE')
+plt.plot(EBsiteMatch['PAW-O']['PBE']['Brookite'][1], EBsiteMatch['PAW-O']['PBE']['Brookite'][0],
+'go-', label = r'$\Delta$E$_{R-B}$,PBE')
+
+plt.plot(EBsiteMatch['PAW-O-s']['PBE']['Anatase'][1], EBsiteMatch['PAW-O-s']['PBE']['Anatase'][0],
+'bv-', label = r'$\Delta$E$_{R-A}$,PBEs')
+plt.plot(EBsiteMatch['PAW-O-s']['PBE']['Columbite'][1], EBsiteMatch['PAW-O-s']['PBE']['Columbite'][0],
+'rv-', label = r'$\Delta$E$_{R-C}$,PBEs')
+plt.plot(EBsiteMatch['PAW-O-s']['PBE']['Brookite'][1], EBsiteMatch['PAW-O-s']['PBE']['Brookite'][0],
+'gv-', label = r'$\Delta$E$_{R-B}$,PBEs')
+
+plt.plot(EBsiteMatch['PAW-O']['LDA']['Anatase'][1], EBsiteMatch['PAW-O']['LDA']['Anatase'][0],
+'bs-', label = r'$\Delta$E$_{R-A}$,LDA')
+plt.plot(EBsiteMatch['PAW-O']['LDA']['Columbite'][1], EBsiteMatch['PAW-O']['LDA']['Columbite'][0],
+'rs-', label = r'$\Delta$E$_{R-C}$,LDA')
+plt.plot(EBsiteMatch['PAW-O']['LDA']['Brookite'][1], EBsiteMatch['PAW-O']['LDA']['Brookite'][0],
+'gs-', label = r'$\Delta$E$_{R-B}$,LDA')
+
+plt.xlabel( 'U value (eV)' )
+plt.ylim( (-0.1, 0.3) )
+plt.ylabel('Energy Difference (eV/f.u.)')
+plt.legend(loc = 'upper center', prop={'size':6.5}, ncol = 2)
+plt.axvspan(2.79, 4.3, facecolor='m', alpha=0.5)
+
+plt.gcf().subplots_adjust(left=0.27)
+plt.gcf().subplots_adjust(bottom=0.11)
+
+#for ext in ['png', 'pdf', 'eps']:
+#    plt.savefig('./figures/TiO2-stability-RACB-PBELDAPBEs' + '.' + ext, dpi=300)
+#plt.clf()
+#+END_SRC
+
+#+RESULTS:
+[[./.ob-jupyter/999fbfa2114bcc4a129cc7665bc150ef87c067f4.png]]
+#+END_SRC

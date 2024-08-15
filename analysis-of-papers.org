@@ -240,6 +240,26 @@ Data is in json, easy to read in Python, and we were able regenerate figures, ta
 This paper gets an A for data-sharing.
 
 * TODO Matthew Curnan and John R. Kitchin, Investigating the Energetic Ordering of Stable and Metastable TiO2 Polymorphs Using DFT+U and Hybrid Functionals, J. Phys. Chem. C, 119 (36), 21060–21071 (2015). http://dx.doi.org/10.1021/acs.jpcc.5b05338. 
+:PROPERTIES:
+:ID:       EE3388CD-32D6-474C-A5FA-32A5A97A7C0B
+:END:
+
+
+#+caption: Data alchemist at work.
+#+attr_org: :width 300
+[[./screenshots/date-15-08-2024-time-14-23-19.png]]
+
 
 Uses sqlite for data
 
+#+BEGIN_SRC sh
+cd videos/video-4/
+pdftk jp5b05338_si_001.pdf unpack_files output .
+#+END_SRC
+
+Notes:
+- We used sqlite to store and retrieve data
+- We embedded csv, sqlite and org files in the SI
+- pdftk was used to extract the attachments
+- Code was Python2, and needed light modification to work with Python3
+- The original sqlite file still works 10 years later!

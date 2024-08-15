@@ -17,6 +17,7 @@ See [[./analysis-of-papers.org]] for each paper in this series.
 | https://doi.org/10.1007/s11244-013-0166-3   | A     | org-mode                     | [[id:448AADA0-5799-4114-B3C9-4CD7A3C3E11D][analysis]] |
 | https://doi.org/10.1016/j.ijggc.2013.06.020 | C     | Excel file for data, no code | [[id:A33642CC-7354-4CEB-8678-FB152641D1F0][analysis]] |
 | https://doi.org/10.1021/am4059149           | A     | org-mode, json               | [[id:F3690788-6B48-4989-B2AD-BA5EE7E219A6][analysis]] |
+| http://dx.doi.org/10.1021/acs.jpcc.5b05338  | A     | org-mode, csv, sqlite        | [[id:EE3388CD-32D6-474C-A5FA-32A5A97A7C0B][analysis]] |
 
 
 
