@@ -239,7 +239,7 @@ Data is in json, easy to read in Python, and we were able regenerate figures, ta
 
 This paper gets an A for data-sharing.
 
-* TODO Matthew Curnan and John R. Kitchin, Investigating the Energetic Ordering of Stable and Metastable TiO2 Polymorphs Using DFT+U and Hybrid Functionals, J. Phys. Chem. C, 119 (36), 21060–21071 (2015). http://dx.doi.org/10.1021/acs.jpcc.5b05338. 
+* Matthew Curnan and John R. Kitchin, Investigating the Energetic Ordering of Stable and Metastable TiO2 Polymorphs Using DFT+U and Hybrid Functionals, J. Phys. Chem. C, 119 (36), 21060–21071 (2015). http://dx.doi.org/10.1021/acs.jpcc.5b05338. 
 :PROPERTIES:
 :ID:       EE3388CD-32D6-474C-A5FA-32A5A97A7C0B
 :END:
